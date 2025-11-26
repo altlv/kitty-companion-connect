@@ -14,16 +14,219 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      adoption_applications: {
+        Row: {
+          applicant_email: string
+          applicant_location: string
+          applicant_name: string
+          applicant_phone: string
+          cat_id: string
+          created_at: string
+          id: string
+          message: string
+          status: string
+        }
+        Insert: {
+          applicant_email: string
+          applicant_location: string
+          applicant_name: string
+          applicant_phone: string
+          cat_id: string
+          created_at?: string
+          id?: string
+          message: string
+          status?: string
+        }
+        Update: {
+          applicant_email?: string
+          applicant_location?: string
+          applicant_name?: string
+          applicant_phone?: string
+          cat_id?: string
+          created_at?: string
+          id?: string
+          message?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "adoption_applications_cat_id_fkey"
+            columns: ["cat_id"]
+            isOneToOne: false
+            referencedRelation: "cats"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cats: {
+        Row: {
+          age: Database["public"]["Enums"]["cat_age"]
+          color: string
+          created_at: string
+          description: string
+          gender: Database["public"]["Enums"]["cat_gender"]
+          good_with: string[]
+          id: string
+          image_url: string
+          is_available: boolean
+          name: string
+          personality: string[]
+          shelter_id: string
+          size: Database["public"]["Enums"]["cat_size"]
+          updated_at: string
+        }
+        Insert: {
+          age: Database["public"]["Enums"]["cat_age"]
+          color: string
+          created_at?: string
+          description: string
+          gender: Database["public"]["Enums"]["cat_gender"]
+          good_with?: string[]
+          id?: string
+          image_url: string
+          is_available?: boolean
+          name: string
+          personality?: string[]
+          shelter_id: string
+          size: Database["public"]["Enums"]["cat_size"]
+          updated_at?: string
+        }
+        Update: {
+          age?: Database["public"]["Enums"]["cat_age"]
+          color?: string
+          created_at?: string
+          description?: string
+          gender?: Database["public"]["Enums"]["cat_gender"]
+          good_with?: string[]
+          id?: string
+          image_url?: string
+          is_available?: boolean
+          name?: string
+          personality?: string[]
+          shelter_id?: string
+          size?: Database["public"]["Enums"]["cat_size"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cats_shelter_id_fkey"
+            columns: ["shelter_id"]
+            isOneToOne: false
+            referencedRelation: "shelters"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string
+          full_name: string | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          full_name?: string | null
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          full_name?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      shelters: {
+        Row: {
+          address: string | null
+          city: string | null
+          created_at: string
+          description: string | null
+          email: string | null
+          id: string
+          name: string
+          phone: string | null
+          state: string | null
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          city?: string | null
+          created_at?: string
+          description?: string | null
+          email?: string | null
+          id?: string
+          name: string
+          phone?: string | null
+          state?: string | null
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          city?: string | null
+          created_at?: string
+          description?: string | null
+          email?: string | null
+          id?: string
+          name?: string
+          phone?: string | null
+          state?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_roles_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "shelter_staff" | "user"
+      cat_age: "kitten" | "young" | "adult" | "senior"
+      cat_gender: "male" | "female"
+      cat_size: "small" | "medium" | "large"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +353,11 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "shelter_staff", "user"],
+      cat_age: ["kitten", "young", "adult", "senior"],
+      cat_gender: ["male", "female"],
+      cat_size: ["small", "medium", "large"],
+    },
   },
 } as const
