@@ -1,14 +1,26 @@
-import { Cat } from "@/data/cats";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+interface Cat {
+  id: string;
+  name: string;
+  age: "kitten" | "young" | "adult" | "senior";
+  color: string;
+  size: "small" | "medium" | "large";
+  gender: "male" | "female";
+  personality: string[];
+  good_with: string[];
+  description: string;
+  image_url: string;
+}
+
 interface CatCardProps {
   cat: Cat;
   isFavorite: boolean;
-  onToggleFavorite: (id: number) => void;
+  onToggleFavorite: (id: string) => void;
   onAdopt: (cat: Cat) => void;
 }
 
@@ -27,7 +39,7 @@ export const CatCard = ({ cat, isFavorite, onToggleFavorite, onAdopt }: CatCardP
     <Card className="overflow-hidden transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl animate-in fade-in slide-in-from-bottom-4">
       <div className="relative h-64 overflow-hidden bg-gradient-primary">
         <img 
-          src={cat.image} 
+          src={cat.image_url} 
           alt={cat.name}
           className="w-full h-full object-cover"
           loading="lazy"

@@ -1,11 +1,33 @@
-import { useState, useMemo } from "react";
-import { cats, Cat } from "@/data/cats";
+import { useState, useMemo, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 import { CatCard } from "@/components/CatCard";
 import { FilterSection, Filters } from "@/components/FilterSection";
 import { AdoptionModal } from "@/components/AdoptionModal";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { LogIn, LogOut, Settings } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+
+interface Cat {
+  id: string;
+  name: string;
+  age: "kitten" | "young" | "adult" | "senior";
+  color: string;
+  size: "small" | "medium" | "large";
+  gender: "male" | "female";
+  personality: string[];
+  good_with: string[];
+  description: string;
+  image_url: string;
+  is_available: boolean;
+}
 
 const Index = () => {
+  const navigate = useNavigate();
+  const { user, isAdmin, isShelterStaff, signOut } = useAuth();
+  const [cats, setCats] = useState<Cat[]>([]);
+  const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState<Filters>({
     age: "",
     color: "",
@@ -15,10 +37,38 @@ const Index = () => {
     gender: ""
   });
   
-  const [favorites, setFavorites] = useState<number[]>([]);
+  const [favorites, setFavorites] = useState<string[]>(() => {
+    const saved = localStorage.getItem("meowmatch-favorites");
+    return saved ? JSON.parse(saved) : [];
+  });
   const [showOnlyFavorites, setShowOnlyFavorites] = useState(false);
   const [selectedCat, setSelectedCat] = useState<Cat | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
+
+  useEffect(() => {
+    fetchCats();
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("meowmatch-favorites", JSON.stringify(favorites));
+  }, [favorites]);
+
+  const fetchCats = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("cats")
+        .select("*")
+        .eq("is_available", true)
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+      setCats(data || []);
+    } catch (error) {
+      console.error("Error fetching cats:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const filteredCats = useMemo(() => {
     let result = cats;
@@ -42,7 +92,7 @@ const Index = () => {
       result = result.filter(cat => cat.personality.includes(filters.personality));
     }
     if (filters.goodWith) {
-      result = result.filter(cat => cat.goodWith.includes(filters.goodWith));
+      result = result.filter(cat => cat.good_with.includes(filters.goodWith));
     }
     if (filters.gender) {
       result = result.filter(cat => cat.gender === filters.gender);
@@ -67,12 +117,24 @@ const Index = () => {
     setShowOnlyFavorites(false);
   };
 
-  const handleToggleFavorite = (id: number) => {
+  const handleToggleFavorite = (id: string) => {
     setFavorites(prev => 
       prev.includes(id) 
         ? prev.filter(favId => favId !== id)
         : [...prev, id]
     );
+  };
+
+  const handleAuth = () => {
+    navigate("/auth");
+  };
+
+  const handleSignOut = async () => {
+    await signOut();
+  };
+
+  const handleAdminDashboard = () => {
+    navigate("/admin");
   };
 
   const handleViewFavorites = () => {
@@ -89,6 +151,40 @@ const Index = () => {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <header className="text-center text-white mb-8 animate-in fade-in slide-in-from-top-8 duration-700">
+          <div className="flex justify-end mb-4 gap-2">
+            {user ? (
+              <>
+                {(isAdmin || isShelterStaff) && (
+                  <Button
+                    onClick={handleAdminDashboard}
+                    variant="outline"
+                    className="bg-white/20 border-white/30 text-white hover:bg-white/30"
+                  >
+                    <Settings className="mr-2 h-4 w-4" />
+                    Admin Dashboard
+                  </Button>
+                )}
+                <Button
+                  onClick={handleSignOut}
+                  variant="outline"
+                  className="bg-white/20 border-white/30 text-white hover:bg-white/30"
+                >
+                  <LogOut className="mr-2 h-4 w-4" />
+                  Sign Out
+                </Button>
+              </>
+            ) : (
+              <Button
+                onClick={handleAuth}
+                variant="outline"
+                className="bg-white/20 border-white/30 text-white hover:bg-white/30"
+              >
+                <LogIn className="mr-2 h-4 w-4" />
+                Login / Sign Up
+              </Button>
+            )}
+          </div>
+
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-3 drop-shadow-lg">
             🐱 MeowMatch
           </h1>
@@ -115,7 +211,11 @@ const Index = () => {
         </div>
 
         {/* Results */}
-        {filteredCats.length > 0 ? (
+        {loading ? (
+          <div className="text-center text-white text-xl py-12">
+            Loading cats...
+          </div>
+        ) : filteredCats.length > 0 ? (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-6">
               {filteredCats.map((cat) => (
