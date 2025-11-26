@@ -43,6 +43,7 @@ Display,FR-028,Cat Basic Info,✅ Met,Name age gender color size all displayed,
 Display,FR-029,Personality Tags,✅ Met,Up to 3 personality tags shown as badges,
 Display,FR-030,Cat Description,✅ Met,Description displayed with line-clamp-2,
 Display,FR-031,Cat Emoji,❌ Not Implemented,Emoji only in header not on individual cards,CRITICAL
+Display,FR-031A,Cat pictures,✅ Met,Emoji only in header not on individual cards,CRITICAL
 Display,FR-032,Grid Layout,✅ Met,Responsive grid: 1/2/3/4 columns based on screen size,
 Display,FR-033,No Results Message,✅ Met,No Cats Found with sad emoji when filters yield zero,
 Display,FR-034,Card Hover Effect,✅ Met,Scale and shadow effects on hover,
