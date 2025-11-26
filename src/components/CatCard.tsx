@@ -37,7 +37,7 @@ export const CatCard = ({ cat, isFavorite, onToggleFavorite, onAdopt }: CatCardP
 
   return (
     <Card className="overflow-hidden transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl animate-in fade-in slide-in-from-bottom-4">
-      <div className="relative h-64 overflow-hidden bg-gradient-primary">
+      <div className="relative h-48 overflow-hidden bg-gradient-primary">
         <img 
           src={cat.image_url} 
           alt={cat.name}
@@ -46,24 +46,16 @@ export const CatCard = ({ cat, isFavorite, onToggleFavorite, onAdopt }: CatCardP
         />
       </div>
       
-      <div className="p-5 space-y-4">
+      <div className="p-4 space-y-3">
         <div>
-          <h3 className="text-2xl font-bold text-card-foreground mb-3">{cat.name}</h3>
+          <h3 className="text-xl font-bold text-card-foreground mb-2">{cat.name}</h3>
           
-          <div className="grid grid-cols-2 gap-2 mb-4">
-            <div className="bg-muted p-2 rounded-lg text-sm">
+          <div className="grid grid-cols-2 gap-2 mb-3">
+            <div className="bg-muted p-2 rounded-lg text-xs">
               <strong className="block text-card-foreground mb-1">Age:</strong>
               <span className="text-muted-foreground">{getAgeLabel(cat.age)}</span>
             </div>
-            <div className="bg-muted p-2 rounded-lg text-sm">
-              <strong className="block text-card-foreground mb-1">Color:</strong>
-              <span className="text-muted-foreground capitalize">{cat.color}</span>
-            </div>
-            <div className="bg-muted p-2 rounded-lg text-sm">
-              <strong className="block text-card-foreground mb-1">Size:</strong>
-              <span className="text-muted-foreground capitalize">{cat.size}</span>
-            </div>
-            <div className="bg-muted p-2 rounded-lg text-sm">
+            <div className="bg-muted p-2 rounded-lg text-xs">
               <strong className="block text-card-foreground mb-1">Gender:</strong>
               <span className="text-muted-foreground capitalize">{cat.gender}</span>
             </div>
@@ -71,11 +63,11 @@ export const CatCard = ({ cat, isFavorite, onToggleFavorite, onAdopt }: CatCardP
         </div>
 
         <div>
-          <div className="flex flex-wrap gap-2 mb-3">
-            {cat.personality.map((trait) => (
+          <div className="flex flex-wrap gap-1.5 mb-3">
+            {cat.personality.slice(0, 3).map((trait) => (
               <Badge 
                 key={trait} 
-                className="bg-gradient-primary text-primary-foreground hover:opacity-90"
+                className="bg-gradient-primary text-primary-foreground hover:opacity-90 text-xs"
               >
                 {trait}
               </Badge>
@@ -83,14 +75,14 @@ export const CatCard = ({ cat, isFavorite, onToggleFavorite, onAdopt }: CatCardP
           </div>
         </div>
 
-        <p className="text-sm text-muted-foreground leading-relaxed">
+        <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">
           {cat.description}
         </p>
 
         <div className="flex gap-2 pt-2">
           <Button
             onClick={() => onAdopt(cat)}
-            className="flex-1 bg-gradient-primary hover:opacity-90 transition-all duration-300 hover:scale-105"
+            className="flex-1 bg-gradient-primary hover:opacity-90 transition-all duration-300 hover:scale-105 text-sm h-9"
           >
             Adopt Me
           </Button>
@@ -99,11 +91,11 @@ export const CatCard = ({ cat, isFavorite, onToggleFavorite, onAdopt }: CatCardP
             size="icon"
             onClick={() => onToggleFavorite(cat.id)}
             className={cn(
-              "transition-all duration-300",
+              "transition-all duration-300 h-9 w-9",
               isFavorite && "bg-favorite-light text-favorite border-favorite hover:bg-favorite-light"
             )}
           >
-            <Heart className={cn("h-5 w-5", isFavorite && "fill-favorite")} />
+            <Heart className={cn("h-4 w-4", isFavorite && "fill-favorite")} />
           </Button>
         </div>
       </div>
