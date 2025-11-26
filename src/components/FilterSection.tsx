@@ -38,7 +38,7 @@ export const FilterSection = ({
               <SelectValue placeholder="All Ages" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All Ages</SelectItem>
+              <SelectItem value="all">All Ages</SelectItem>
               <SelectItem value="kitten">Kitten (0-1 year)</SelectItem>
               <SelectItem value="young">Young (1-3 years)</SelectItem>
               <SelectItem value="adult">Adult (3-7 years)</SelectItem>
@@ -54,7 +54,7 @@ export const FilterSection = ({
               <SelectValue placeholder="All Colors" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All Colors</SelectItem>
+              <SelectItem value="all">All Colors</SelectItem>
               <SelectItem value="orange">Orange</SelectItem>
               <SelectItem value="black">Black</SelectItem>
               <SelectItem value="white">White</SelectItem>
@@ -73,7 +73,7 @@ export const FilterSection = ({
               <SelectValue placeholder="All Sizes" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All Sizes</SelectItem>
+              <SelectItem value="all">All Sizes</SelectItem>
               <SelectItem value="small">Small</SelectItem>
               <SelectItem value="medium">Medium</SelectItem>
               <SelectItem value="large">Large</SelectItem>
@@ -88,7 +88,7 @@ export const FilterSection = ({
               <SelectValue placeholder="All Personalities" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All Personalities</SelectItem>
+              <SelectItem value="all">All Personalities</SelectItem>
               <SelectItem value="playful">Playful & Energetic</SelectItem>
               <SelectItem value="calm">Calm & Relaxed</SelectItem>
               <SelectItem value="affectionate">Affectionate & Cuddly</SelectItem>
@@ -104,7 +104,7 @@ export const FilterSection = ({
               <SelectValue placeholder="No Filter" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">No Filter</SelectItem>
+              <SelectItem value="all">No Filter</SelectItem>
               <SelectItem value="children">Children</SelectItem>
               <SelectItem value="dogs">Dogs</SelectItem>
               <SelectItem value="other-cats">Other Cats</SelectItem>
@@ -119,7 +119,7 @@ export const FilterSection = ({
               <SelectValue placeholder="All Genders" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All Genders</SelectItem>
+              <SelectItem value="all">All Genders</SelectItem>
               <SelectItem value="male">Male</SelectItem>
               <SelectItem value="female">Female</SelectItem>
             </SelectContent>

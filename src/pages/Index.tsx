@@ -29,12 +29,12 @@ const Index = () => {
   const [cats, setCats] = useState<Cat[]>([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState<Filters>({
-    age: "",
-    color: "",
-    size: "",
-    personality: "",
-    goodWith: "",
-    gender: ""
+    age: "all",
+    color: "all",
+    size: "all",
+    personality: "all",
+    goodWith: "all",
+    gender: "all"
   });
   
   const [favorites, setFavorites] = useState<string[]>(() => {
@@ -79,22 +79,22 @@ const Index = () => {
     }
 
     // Apply filters
-    if (filters.age) {
+    if (filters.age && filters.age !== "all") {
       result = result.filter(cat => cat.age === filters.age);
     }
-    if (filters.color) {
+    if (filters.color && filters.color !== "all") {
       result = result.filter(cat => cat.color === filters.color);
     }
-    if (filters.size) {
+    if (filters.size && filters.size !== "all") {
       result = result.filter(cat => cat.size === filters.size);
     }
-    if (filters.personality) {
+    if (filters.personality && filters.personality !== "all") {
       result = result.filter(cat => cat.personality.includes(filters.personality));
     }
-    if (filters.goodWith) {
+    if (filters.goodWith && filters.goodWith !== "all") {
       result = result.filter(cat => cat.good_with.includes(filters.goodWith));
     }
-    if (filters.gender) {
+    if (filters.gender && filters.gender !== "all") {
       result = result.filter(cat => cat.gender === filters.gender);
     }
 
@@ -107,12 +107,12 @@ const Index = () => {
 
   const handleReset = () => {
     setFilters({
-      age: "",
-      color: "",
-      size: "",
-      personality: "",
-      goodWith: "",
-      gender: ""
+      age: "all",
+      color: "all",
+      size: "all",
+      personality: "all",
+      goodWith: "all",
+      gender: "all"
     });
     setShowOnlyFavorites(false);
   };
