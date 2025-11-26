@@ -3,9 +3,23 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Cat } from "@/data/cats";
 import { useState } from "react";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
+import { z } from "zod";
+
+interface Cat {
+  id: string;
+  name: string;
+}
+
+const applicationSchema = z.object({
+  name: z.string().min(1, "Name is required").max(100),
+  email: z.string().email("Invalid email address").max(255),
+  phone: z.string().min(10, "Phone number must be at least 10 characters").max(20),
+  location: z.string().min(1, "Location is required").max(100),
+  message: z.string().min(10, "Message must be at least 10 characters").max(1000)
+});
 
 interface AdoptionModalProps {
   cat: Cat | null;
@@ -22,13 +36,39 @@ export const AdoptionModal = ({ cat, open, onClose }: AdoptionModalProps) => {
     message: ""
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success(`Application submitted for ${cat?.name}! 🎉`, {
-      description: "We'll contact you soon to schedule a meet and greet!"
-    });
-    setFormData({ name: "", email: "", phone: "", location: "", message: "" });
-    onClose();
+    
+    if (!cat) return;
+
+    try {
+      const validated = applicationSchema.parse(formData);
+
+      const { error } = await supabase
+        .from("adoption_applications")
+        .insert({
+          cat_id: cat.id,
+          applicant_name: validated.name,
+          applicant_email: validated.email,
+          applicant_phone: validated.phone,
+          applicant_location: validated.location,
+          message: validated.message
+        });
+
+      if (error) throw error;
+
+      toast.success(`Application submitted for ${cat?.name}! 🎉`, {
+        description: "We'll contact you soon to schedule a meet and greet!"
+      });
+      setFormData({ name: "", email: "", phone: "", location: "", message: "" });
+      onClose();
+    } catch (error: any) {
+      if (error instanceof z.ZodError) {
+        toast.error(error.errors[0].message);
+      } else {
+        toast.error("Failed to submit application. Please try again.");
+      }
+    }
   };
 
   if (!cat) return null;
